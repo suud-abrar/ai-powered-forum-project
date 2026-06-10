@@ -1,6 +1,9 @@
-import { assessAnswerAgainstQuestionService } from "../service/geminiTextCoach.service.js";
+import {
+  assessAnswerAgainstQuestionService,
+  generateQuestionDraftCoachService,
+} from "../service/geminiTextCoach.service.js";
 
-const assessAnswerAgainstQuestionController = async (req, res, next) => {
+export const assessAnswerAgainstQuestionController = async (req, res, next) => {
   try {
     const { questionHash } = req.params;
     const { answerText } = req.body;
@@ -30,4 +33,20 @@ const assessAnswerAgainstQuestionController = async (req, res, next) => {
   }
 };
 
-export { assessAnswerAgainstQuestionController };
+export const generateQuestionDraftCoachController = async (req, res, next) => {
+  try {
+    const { title, content } = req.body;
+
+    const result = await generateQuestionDraftCoachService(title, content);
+
+    return res.status(200).json({
+      success: true,
+      message: "Draft suggestions generated",
+      data: {
+        tips: result.tips,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
