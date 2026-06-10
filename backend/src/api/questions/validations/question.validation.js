@@ -35,3 +35,19 @@ const validateAnswerFitBody = (req, res, next) => {
 };
 
 export { validateQuestionHash, validateAnswerFitBody };
+
+export const generateQuestionDraftCoachValidation = (req, res, next) => {
+  const schema = Joi.object({
+    title: Joi.string().optional(),
+    content: Joi.string().required().messages({
+      "any.required": "content is required",
+      "string.empty": "content cannot be empty",
+    }),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+  next();
+};
