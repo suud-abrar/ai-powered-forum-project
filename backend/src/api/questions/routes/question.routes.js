@@ -4,7 +4,8 @@ import { authenticateUser } from "../../../middleware/authentication.js";
 import { validationErrorHandler } from "../../../middleware/validation-handler.js";
 
 // ── Validations ───────────────────────────────
-import {
+import { 
+  createQuestionValidation,
   validateQuestionHash,
   validateAnswerFitBody,
   generateQuestionDraftCoachValidation,
@@ -26,10 +27,10 @@ const router = Router();
 
 // POST /api/questions/draft-coach
 router.post(
-  "/draft-coach",
+  "/",
   authenticateUser,
-  generateQuestionDraftCoachValidation,
-  generateQuestionDraftCoachController,
+  createQuestionValidation,
+  createQuestionController,
 );
 // POST /api/questions/:questionHash/answer-fit
 router.post(
