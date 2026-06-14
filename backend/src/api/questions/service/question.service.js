@@ -89,7 +89,7 @@ export const listQuestionsService = async ({ search, mine, userId }) => {
 };
 
 export const getQuestionDetailsService = async (questionHash) => {
-  // 1. Get question
+  // 1. Get question + question author info
   const questionQuery = `
     SELECT
       q.question_id,
@@ -97,8 +97,11 @@ export const getQuestionDetailsService = async (questionHash) => {
       q.title,
       q.content,
       q.user_id,
-      q.created_at
+      q.created_at,
+      u.first_name,
+      u.last_name
     FROM questions q
+    JOIN users u ON u.user_id = q.user_id
     WHERE q.question_hash = ?
   `;
 
@@ -110,14 +113,17 @@ export const getQuestionDetailsService = async (questionHash) => {
 
   const question = questionResult[0];
 
-  // 2. Get answers
+  // 2. Get answers + answer author info
   const answersQuery = `
     SELECT
       a.answer_id,
       a.content,
       a.user_id,
-      a.created_at
+      a.created_at,
+      u.first_name,
+      u.last_name
     FROM answers a
+    JOIN users u ON u.user_id = a.user_id
     WHERE a.question_id = ?
     ORDER BY a.created_at DESC
   `;

@@ -9,12 +9,18 @@ import { apiClient } from "../core/api.client";
 /**
  * GET /api/questions
  * Fetch all questions, optionally filtered by keyword search.
- * @param {{ search?: string, limit?: number, offset?: number }} params
+ * @param {{ search?: string, mine?: boolean, limit?: number, offset?: number }} params
  */
-export async function getQuestions({ search, limit = 100, offset = 0 } = {}) {
+export async function getQuestions({
+  search,
+  mine,
+  limit = 100,
+  offset = 0,
+} = {}) {
   const res = await apiClient.get("/api/questions", {
     params: {
       ...(search ? { q: search } : {}),
+      ...(mine !== undefined ? { mine } : {}),
       limit,
       offset,
     },

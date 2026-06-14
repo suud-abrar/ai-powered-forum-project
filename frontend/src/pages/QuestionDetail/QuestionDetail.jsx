@@ -43,13 +43,10 @@ function FitBadge({ level }) {
 // ── AnswerCard ────────────────────────────────────────────────────────────────
 
 function AnswerCard({ answer }) {
-  const initials = getInitials(
-    answer.author?.firstName,
-    answer.author?.lastName,
-  );
+  const initials = getInitials(answer?.first_name, answer?.last_name);
   const name =
-    answer.author?.firstName && answer.author?.lastName
-      ? `${answer.author.firstName} ${answer.author.lastName}`
+    answer?.first_name && answer?.last_name
+      ? `${answer.first_name} ${answer.last_name}`
       : "New User";
 
   return (
@@ -73,6 +70,7 @@ function AnswerCard({ answer }) {
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function QuestionDetail() {
+  const [showToast, setShowToast] = useState(false);
   const { questionHash } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -97,6 +95,7 @@ export default function QuestionDetail() {
     const before = answerText.slice(0, start);
     const after = answerText.slice(end);
     const newText = `${before}${prefix}${selected}${suffix}${after}`;
+
     setAnswerText(newText);
     setTimeout(() => {
       textarea.focus();
@@ -212,14 +211,14 @@ export default function QuestionDetail() {
 
   // ── Render: Full page ─────────────────────────────────────────────────────
 
-  const questionAuthorName = question.author
-    ? `${question.author.firstName ?? ""} ${question.author.lastName ?? ""}`.trim() ||
-      "New User"
+  const questionAuthorName = question?.first_name
+    ? `${question.first_name} ${question.last_name ?? ""}`.trim()
     : "New User";
 
-  const questionInitials = question.author
-    ? getInitials(question.author.firstName, question.author.lastName)
-    : "NU";
+  const questionInitials = getInitials(
+    question?.first_name,
+    question?.last_name,
+  );
 
   return (
     <div className={styles.page}>
@@ -246,31 +245,37 @@ export default function QuestionDetail() {
             <h1 className={styles.questionTitle}>{question.title}</h1>
             <p className={styles.questionContent}>{question.content}</p>
 
-            <div className={styles.questionFooter}>
-              {/* Copy URL to clipboard */}
-              <button
-                className={styles.shareBtn}
-                onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  alert("Link copied!");
-                }}
-              >
-                <ShareIcon /> Share
-              </button>
+            {/* ── Question card ── */}
+            <div className={styles.questionCard}>
+              {/* ... all question card content ... */}
 
-              {/* Scroll to answers section */}
-              <button
-                className={styles.answersBtn}
-                onClick={() =>
-                  document
-                    .getElementById("answers-section")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-              >
-                <ChatIcon /> {answers.length}{" "}
-                {answers.length === 1 ? "Answer" : "Answers"}
-              </button>
+              <div className={styles.questionFooter}>
+                <button
+                  className={styles.shareBtn}
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    setShowToast(true);
+                    setTimeout(() => setShowToast(false), 3000);
+                  }}
+                >
+                  <ShareIcon /> Share
+                </button>
+
+                <button
+                  className={styles.answersBtn}
+                  onClick={() =>
+                    document
+                      .getElementById("answers-section")
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  <ChatIcon /> {answers.length}{" "}
+                  {answers.length === 1 ? "Answer" : "Answers"}
+                </button>
+              </div>
             </div>
+
+            {/* ✅ Toast moved OUTSIDE the footer, at the bottom of the page div */}
           </div>
 
           {/* ── Community Answers ── */}
@@ -291,7 +296,7 @@ export default function QuestionDetail() {
             ) : (
               <div className={styles.answerList}>
                 {answers.map((answer) => (
-                  <AnswerCard key={answer.id} answer={answer} />
+                  <AnswerCard key={answer.answer_id} answer={answer} />
                 ))}
               </div>
             )}
@@ -415,6 +420,12 @@ export default function QuestionDetail() {
           )}
         </aside>
       </div>
+      {showToast && (
+        <div className={styles.toast}>
+          <span className={styles.toast__icon}>✓</span>
+          Link copied to clipboard!
+        </div>
+      )}
     </div>
   );
 }
