@@ -4,7 +4,7 @@
  * Import this in Dashboard, PostQuestion, QuestionDetail, MyQuestions.
  */
 
-import { apiClient } from '../core/api.client';
+import { apiClient } from "../core/api.client";
 
 /**
  * GET /api/questions
@@ -12,7 +12,7 @@ import { apiClient } from '../core/api.client';
  * @param {{ search?: string, limit?: number, offset?: number }} params
  */
 export async function getQuestions({ search, limit = 100, offset = 0 } = {}) {
-  const res = await apiClient.get('/api/questions', {
+  const res = await apiClient.get("/api/questions", {
     params: {
       ...(search ? { q: search } : {}),
       limit,
@@ -28,8 +28,11 @@ export async function getQuestions({ search, limit = 100, offset = 0 } = {}) {
  * @param {string} query
  * @param {{ limit?: number, offset?: number }} opts
  */
-export async function searchQuestionsSemantic(query, { limit = 100, offset = 0 } = {}) {
-  const res = await apiClient.get('/api/questions/search', {
+export async function searchQuestionsSemantic(
+  query,
+  { limit = 100, offset = 0 } = {},
+) {
+  const res = await apiClient.get("/api/questions/search", {
     params: { q: query, limit, offset },
   });
   return res.data;
@@ -51,7 +54,7 @@ export async function getQuestion(questionHash) {
  * @param {{ title: string, content: string }} data
  */
 export async function createQuestion(data) {
-  const res = await apiClient.post('/api/questions', data);
+  const res = await apiClient.post("/api/questions", data);
   return res.data;
 }
 
@@ -61,7 +64,7 @@ export async function createQuestion(data) {
  * @param {{ title: string, content: string }} data
  */
 export async function generateQuestionDraftCoach(data) {
-  const res = await apiClient.post('/api/questions/draft-coach', data);
+  const res = await apiClient.post("/api/questions/draft-coach", data);
   return res.data;
 }
 
@@ -70,9 +73,17 @@ export async function generateQuestionDraftCoach(data) {
  * Get semantically similar questions based on an existing question's vector.
  * @param {string} questionHash
  */
-export async function getSimilarQuestions(questionHash) {
-  const res = await apiClient.get(`/api/questions/${questionHash}/similar`);
-  return res.data;
+export async function getSimilarQuestions(
+  questionHash,
+  { k = 5, threshold = 0.5 } = {},
+) {
+  const response = await apiClient.get(
+    `/api/questions/${questionHash}/similar`,
+    {
+      params: { k, threshold },
+    },
+  );
+  return response.data.data;
 }
 
 /**
@@ -82,7 +93,10 @@ export async function getSimilarQuestions(questionHash) {
  * @param {{ content: string }} data
  */
 export async function evaluateAnswerFit(questionHash, data) {
-  const res = await apiClient.post(`/api/questions/${questionHash}/answer-fit`, data);
+  const res = await apiClient.post(
+    `/api/questions/${questionHash}/answer-fit`,
+    data,
+  );
   return res.data;
 }
 
@@ -92,6 +106,37 @@ export async function evaluateAnswerFit(questionHash, data) {
  * @param {{ questionHash: string, content: string }} data
  */
 export async function createAnswer(data) {
-  const res = await apiClient.post('/api/answers', data);
+  const res = await apiClient.post("/api/answers", data);
   return res.data;
+}
+
+/**Get delails of single question by questionHash */
+
+// frontend/src/services/question/question.service.js
+// Add these functions to your existing question.service.js
+/**
+ * GET /api/questions/:questionHash
+ * Fetches a single question with its answers.
+ * @param {string} questionHash
+ */
+export async function getSingleQuestion(questionHash) {
+  const response = await apiClient.get(`/api/questions/${questionHash}`);
+  return response.data.data;
+}
+
+/**
+ * POST /api/questions/:questionHash/answer-fit
+ * Evaluates how well an answer fits the question using AI.
+ * @param {string} questionHash
+ * @param {string} answerText
+ * @returns {{ level: "strong"|"partial"|"weak", note: string }}
+ */
+export async function assessAnswerFit(questionHash, answerText) {
+  const response = await apiClient.post(
+    `/api/questions/${questionHash}/answer-fit`,
+    {
+      answerText,
+    },
+  );
+  return response.data.data;
 }

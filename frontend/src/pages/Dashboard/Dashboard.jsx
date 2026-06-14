@@ -400,7 +400,7 @@ export default function Dashboard() {
           {!isLoading &&
             !error &&
             questions.map((q) => {
-              const qId = q.questionHash || q.id;
+              const qId = q.question_hash || q.questionHash || q.id;
               const isOwn = q.userId === user?.userId || q.userId === user?.id;
               return (
                 <QuestionRow
