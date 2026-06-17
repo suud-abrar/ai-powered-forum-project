@@ -19,7 +19,7 @@ export async function getQuestions({
 } = {}) {
   const res = await apiClient.get("/api/questions", {
     params: {
-      ...(search ? { q: search } : {}),
+      ...(search ? {search: search } : {}),
       ...(mine !== undefined ? { mine } : {}),
       limit,
       offset,
@@ -39,7 +39,11 @@ export async function searchQuestionsSemantic(
   { limit = 100, offset = 0 } = {},
 ) {
   const res = await apiClient.get("/api/questions/search", {
-    params: { q: query, limit, offset },
+    params: {
+      query: query, // ← was 'q: query', must be 'query' to match backend
+      limit,
+      offset,
+    },
   });
   return res.data;
 }
