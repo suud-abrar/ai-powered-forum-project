@@ -1,0 +1,31 @@
+import { StatusCodes } from "http-status-codes";
+import { searchDocumentService } from "../service/rag.service.js";
+
+export const searchDocumentController = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+    const { query, k = 5 } = req.query;
+
+    if (!query) {
+      return res.status(400).json({
+        success: false,
+        message: "query is required",
+      });
+    }
+
+    const results = await searchDocumentService({
+      documentId,
+      query,
+      k: Number(k),
+      userId: req.user.id,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Document search completed successfully",
+      data: results,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
