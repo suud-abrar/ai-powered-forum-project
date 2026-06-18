@@ -1,5 +1,8 @@
 import { StatusCodes } from "http-status-codes";
-import { searchDocumentService } from "../service/rag.service.js";
+import {
+  searchDocumentService,
+  queryDocumentService,
+} from "../service/rag.service.js";
 
 export const searchDocumentController = async (req, res, next) => {
   try {
@@ -24,6 +27,27 @@ export const searchDocumentController = async (req, res, next) => {
       success: true,
       message: "Document search completed successfully",
       data: results,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const queryDocumentController = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+    const { query } = req.body;
+
+    const result = await queryDocumentService({
+      documentId,
+      query,
+      userId: req.user.id,
+    });
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "AI grounded answer generated successfully",
+      data: result,
     });
   } catch (err) {
     next(err);
