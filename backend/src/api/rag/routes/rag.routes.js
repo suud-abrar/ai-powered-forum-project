@@ -5,6 +5,7 @@ import {
   queryDocumentController,
   getDocumentMetaController,
   getDocumentFileController,
+  listDocumentsController,
 } from "../controller/rag.controller.js";
 import { documentIdParamValidation } from "../validations/rag.validation.js";
 
@@ -22,6 +23,8 @@ router.post(
   queryDocumentController,
 );
 
+// T-24 - List All Documents
+router.get("/documents", authenticateUser, listDocumentsController);
 // T-24 - Get Document Metadata
 router.get(
   "/documents/:documentId",

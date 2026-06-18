@@ -208,3 +208,28 @@ export const assertOwnedDocument = async (documentId, userId) => {
 
   return rows[0]; // { document_id, storage_path, title, mime_type }
 };
+
+
+// add below assertOwnedDocument
+
+export const listDocumentsForUserService = async (userId) => {
+  // Fetch all documents belonging to this user, latest first
+  const rows = await safeExecute(
+    `SELECT
+      document_id,
+      title,
+      mime_type,
+      byte_size,
+      status,
+      error_message,
+      created_at,
+      updated_at
+    FROM documents
+    WHERE user_id = ?
+    ORDER BY created_at DESC`,
+    [userId]
+  );
+
+  // Return empty array if no documents found
+  return rows || [];
+};

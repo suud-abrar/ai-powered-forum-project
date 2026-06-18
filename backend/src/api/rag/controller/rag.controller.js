@@ -6,6 +6,7 @@ import {
   queryDocumentService,
   getDocumentMetaService,
   assertOwnedDocument,
+  listDocumentsForUserService,
 } from "../service/rag.service.js";
 
 export const searchDocumentController = async (req, res, next) => {
@@ -120,6 +121,32 @@ export const getDocumentFileController = async (req, res, next) => {
       if (err) {
         next(err);
       }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const listDocumentsController = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    // Fetch all documents for this user
+    const documents = await listDocumentsForUserService(userId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Documents fetched successfully.",
+      data: documents.map((doc) => ({
+        document_id: doc.document_id,
+        title: doc.title,
+        mime_type: doc.mime_type,
+        byte_size: doc.byte_size,
+        status: doc.status,
+        error_message: doc.error_message,
+        created_at: doc.created_at,
+        updated_at: doc.updated_at,
+      })),
     });
   } catch (error) {
     next(error);
