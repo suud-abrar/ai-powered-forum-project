@@ -1,6 +1,12 @@
 import { safeExecute } from "../../../../db/config.js";
 import { GoogleGenAI } from "@google/genai";
 import { NotFoundError } from "../../../utils/errors/index.js";
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -198,7 +204,7 @@ export const assertOwnedDocument = async (documentId, userId) => {
     FROM documents
     WHERE document_id = ? AND user_id = ?
     LIMIT 1`,
-    [documentId, userId]
+    [documentId, userId],
   );
 
   // Return 404 if not found or doesn't belong to user
@@ -208,7 +214,6 @@ export const assertOwnedDocument = async (documentId, userId) => {
 
   return rows[0]; // { document_id, storage_path, title, mime_type }
 };
-
 
 // add below assertOwnedDocument
 
@@ -227,9 +232,44 @@ export const listDocumentsForUserService = async (userId) => {
     FROM documents
     WHERE user_id = ?
     ORDER BY created_at DESC`,
-    [userId]
+    [userId],
   );
 
   // Return empty array if no documents found
   return rows || [];
+};
+
+
+
+export const deleteDocumentService = async (documentId, userId) => {
+  // 1. Verify ownership — reuse assertOwnedDocument
+  const document = await assertOwnedDocument(documentId, userId);
+
+  // 2. Resolve absolute path of the PDF on disk
+  const absolutePath = path.resolve(
+    __dirname,
+    "../../../../../uploads",
+    document.storage_path,
+  );
+
+  // 3. Delete file from disk
+  // if file is already missing, don't throw — just continue
+  try {
+    await fs.unlink(absolutePath);
+  } catch (err) {
+    if (err.code !== "ENOENT") {
+      // ENOENT means file not found — that's ok
+      // any other error is a real problem
+      throw err;
+    }
+  }
+
+  // 4. Delete record from DB
+  // CASCADE will automatically delete related chunks and vectors
+  await safeExecute(
+    `DELETE FROM documents WHERE document_id = ? AND user_id = ?`,
+    [documentId, userId],
+  );
+
+  return { id: documentId };
 };

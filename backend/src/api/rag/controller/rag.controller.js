@@ -7,6 +7,7 @@ import {
   getDocumentMetaService,
   assertOwnedDocument,
   listDocumentsForUserService,
+  deleteDocumentService,
 } from "../service/rag.service.js";
 
 export const searchDocumentController = async (req, res, next) => {
@@ -147,6 +148,23 @@ export const listDocumentsController = async (req, res, next) => {
         created_at: doc.created_at,
         updated_at: doc.updated_at,
       })),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteDocumentController = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+    const userId = req.user.id;
+
+    const result = await deleteDocumentService(Number(documentId), userId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Document deleted successfully.",
+      data: { id: result.id },
     });
   } catch (error) {
     next(error);

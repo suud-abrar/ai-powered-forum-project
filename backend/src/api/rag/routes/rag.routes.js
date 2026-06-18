@@ -6,6 +6,7 @@ import {
   getDocumentMetaController,
   getDocumentFileController,
   listDocumentsController,
+  deleteDocumentController,
 } from "../controller/rag.controller.js";
 import { documentIdParamValidation } from "../validations/rag.validation.js";
 
@@ -39,6 +40,14 @@ router.get(
   authenticateUser,
   documentIdParamValidation,
   getDocumentFileController,
+);
+
+// T-24 - Delete Document
+router.delete(
+  "/documents/:documentId",
+  authenticateUser,
+  documentIdParamValidation,
+  deleteDocumentController,
 );
 
 export default router;
