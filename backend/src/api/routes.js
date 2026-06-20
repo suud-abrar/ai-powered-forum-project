@@ -15,5 +15,7 @@ mainRouter.use("/questions", questionRoutes);
 // Answer routes
 mainRouter.use("/answers", answerRoutes);
 
-// RAG routes
+//Rag routes
 mainRouter.use("/rag", ragRoutes);
+
+
