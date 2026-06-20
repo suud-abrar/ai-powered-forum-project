@@ -49,16 +49,19 @@ export const createQuestionService = async ({ title, content, userId }) => {
 
 export const listQuestionsService = async ({ search, mine, userId }) => {
   let sql = `
-    SELECT
-      question_id,
-      question_hash,
-      title,
-      content,
-      user_id,
-      created_at
-    FROM questions
-    WHERE 1=1
-  `;
+  SELECT
+    q.question_id,
+    q.question_hash,
+    q.title,
+    q.content,
+    q.user_id,
+    q.created_at,
+    u.first_name,
+    u.last_name
+  FROM questions q
+  JOIN users u ON q.user_id = u.user_id
+  WHERE 1=1
+`;
 
   const params = [];
 
