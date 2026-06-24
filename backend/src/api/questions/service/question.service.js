@@ -80,7 +80,7 @@ export const listQuestionsService = async ({ search, mine, userId }) => {
 
   // Mine filter
   if (mine === "true") {
-    sql += ` AND user_id = ? `;
+    sql += ` AND q.user_id = ? `;
     params.push(userId);
   }
 
