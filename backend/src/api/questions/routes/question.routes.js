@@ -22,6 +22,7 @@ import {
   generateQuestionDraftCoachController,
   searchQuestionsSemanticController,
   getSimilarQuestionsController,
+  recommendAnswerController,
 } from "../controller/question.controller.js";
 const router = Router();
 
@@ -45,6 +46,14 @@ router.get(
   similarQuestionsValidation,
   validationErrorHandler,
   getSimilarQuestionsController,
+);
+
+// GET /api/questions/:questionHash/recommend-answer
+router.get(
+  "/:questionHash/recommend-answer",
+  authenticateUser,
+  validateQuestionHash,
+  recommendAnswerController,
 );
 
 // ── Zaida ───────────────────────────

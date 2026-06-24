@@ -14,6 +14,7 @@ import {
   assessAnswerAgainstQuestionService,
   generateQuestionDraftCoachService,
 } from "../service/geminiTextCoach.service.js";
+import { recommendAnswerService } from "../service/recommended.answer.service.js";
 // ── T-11: Semantic Search ─────────────────────
 export async function searchQuestionsSemanticController(req, res, next) {
   try {
@@ -164,6 +165,31 @@ export const getQuestionDetailsController = async (req, res, next) => {
       success: true,
       message: "Question details fetched successfully",
       data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// recommended answer____________________________________________
+
+export const recommendAnswerController = async (req, res, next) => {
+  try {
+    const { questionHash } = req.params;
+
+    const result = await recommendAnswerService(questionHash);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Question not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Answer recommendation generated",
+      data: result,
     });
   } catch (error) {
     next(error);

@@ -150,3 +150,12 @@ export async function assessAnswerFit(questionHash, answerText) {
   );
   return response.data.data;
 }
+
+//_____ Reconended answer________________________________________________________________________
+
+export async function getRecommendedAnswer(questionHash) {
+  const { data } = await apiClient.get(
+    `/api/questions/${questionHash}/recommend-answer`,
+  );
+  return data.data; 
+}

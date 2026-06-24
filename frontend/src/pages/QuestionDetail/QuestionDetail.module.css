@@ -564,3 +564,81 @@
   font-size: 11px;
   color: #bbb;
 }
+
+
+/* ── Recommended answer ─────────────────────────────────────────────────────────────────── */
+
+/* Answers section header with button aligned right */
+.answersSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* "Find best answer" button */
+.recommendBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1.5px solid #f59e0b;
+  background: transparent;
+  color: #b45309;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.recommendBtn:hover:not(:disabled) {
+  background: #fef3c7;
+}
+.recommendBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Highlighted answer card */
+.answerCardRecommended {
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 0 3px #fef3c720;
+}
+
+/* Badge strip at the top of the recommended card */
+.recommendedBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-bottom: 1px solid #fcd34d;
+}
+
+/* Confidence pill inside the badge */
+.confidencePill {
+  margin-left: auto;
+  background: #f59e0b;
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* Reason explanation at the bottom of the card */
+.recommendedReason {
+  margin: 0.75rem 1rem 0;
+  padding: 0.6rem 0.8rem;
+  background: #fffbeb;
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.82rem;
+  color: #78350f;
+  line-height: 1.5;
+}

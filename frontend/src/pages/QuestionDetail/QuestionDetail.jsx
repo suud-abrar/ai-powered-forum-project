@@ -7,6 +7,7 @@ import {
   getSingleQuestion,
   assessAnswerFit,
   getSimilarQuestions,
+  getRecommendedAnswer,
 } from "../../services/question/question.service";
 import { postAnswer } from "../../services/answer/answer.service";
 import { useAuth } from "../../contexts/AuthContext";
@@ -42,7 +43,12 @@ function FitBadge({ level }) {
 
 // ── AnswerCard ────────────────────────────────────────────────────────────────
 
-function AnswerCard({ answer }) {
+function AnswerCard({
+  answer,
+  isRecommended,
+  recommendationReason,
+  confidence,
+}) {
   const initials = getInitials(answer?.first_name, answer?.last_name);
   const name =
     answer?.first_name && answer?.last_name
@@ -50,7 +56,20 @@ function AnswerCard({ answer }) {
       : "New User";
 
   return (
-    <div className={styles.answerCard}>
+    <div
+      className={`${styles.answerCard} ${isRecommended ? styles.answerCardRecommended : ""}`}
+    >
+      {isRecommended && (
+        <div className={styles.recommendedBadge}>
+          <StarIcon />
+          <span>AI Recommended Answer</span>
+          {confidence && (
+            <span className={styles.confidencePill}>
+              {confidence}% confidence
+            </span>
+          )}
+        </div>
+      )}
       <div className={styles.answerHeader}>
         <div className={styles.avatar}>{initials}</div>
         <div className={styles.answerMeta}>
@@ -63,13 +82,20 @@ function AnswerCard({ answer }) {
       <div className={styles.answerContent}>
         <ReactMarkdown>{answer.content}</ReactMarkdown>
       </div>
+      {isRecommended && recommendationReason && (
+        <div className={styles.recommendedReason}>
+          <strong>Why this answer?</strong> {recommendationReason}
+        </div>
+      )}
     </div>
   );
 }
-
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function QuestionDetail() {
+  const [recommendation, setRecommendation] = useState(null);
+  const [isRecommending, setIsRecommending] = useState(false);
+  const [recommendError, setRecommendError] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const { questionHash } = useParams();
   const navigate = useNavigate();
@@ -185,6 +211,19 @@ export default function QuestionDetail() {
       setIsPosting(false);
     }
   }
+
+  async function handleRecommendAnswer() {
+    setIsRecommending(true);
+    setRecommendError(null);
+    try {
+      const result = await getRecommendedAnswer(questionHash);
+      setRecommendation(result);
+    } catch {
+      setRecommendError("Could not get AI recommendation. Try again.");
+    } finally {
+      setIsRecommending(false);
+    }
+  }
   // ── Render: Loading ───────────────────────────────────────────────────────
 
   if (isLoading) {
@@ -280,9 +319,29 @@ export default function QuestionDetail() {
 
           {/* ── Community Answers ── */}
           <section id="answers-section" className={styles.answersSection}>
-            <h2 className={styles.sectionTitle}>
-              Community Answers ({answers.length})
-            </h2>
+            <div className={styles.answersSectionHeader}>
+              <h2 className={styles.sectionTitle}>
+                Community Answers ({answers.length})
+              </h2>
+              {answers.length >= 2 && (
+                <button
+                  className={styles.recommendBtn}
+                  onClick={handleRecommendAnswer}
+                  disabled={isRecommending}
+                >
+                  {isRecommending ? (
+                    "Evaluating..."
+                  ) : (
+                    <>
+                      <StarIcon /> Find best answer
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+            {recommendError && (
+              <p className={styles.postError}>{recommendError}</p>
+            )}
 
             {answers.length === 0 ? (
               <div className={styles.emptyAnswers}>
@@ -296,7 +355,23 @@ export default function QuestionDetail() {
             ) : (
               <div className={styles.answerList}>
                 {answers.map((answer) => (
-                  <AnswerCard key={answer.answer_id} answer={answer} />
+                  <AnswerCard
+                    key={answer.answer_id}
+                    answer={answer}
+                    isRecommended={
+                      recommendation?.recommendedAnswerId === answer.answer_id
+                    }
+                    confidence={
+                      recommendation?.recommendedAnswerId === answer.answer_id
+                        ? recommendation.confidence
+                        : null
+                    }
+                    recommendationReason={
+                      recommendation?.recommendedAnswerId === answer.answer_id
+                        ? recommendation.reason
+                        : null
+                    }
+                  />
                 ))}
               </div>
             )}
@@ -477,6 +552,20 @@ function ChatBubbleIcon() {
       strokeWidth="1.5"
     >
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      stroke="none"
+    >
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   );
 }
