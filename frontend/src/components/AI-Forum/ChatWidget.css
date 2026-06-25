@@ -335,7 +335,7 @@
 
 /* Send Button */
 .chat-input-submit {
-  background: #2c4a7c !important;
+  background: #344b76 !important;
   color: #eef2ff !important;
   border: none !important;
   border-radius: 16px !important;
@@ -348,20 +348,20 @@
     transform 0.18s ease,
     box-shadow 0.18s ease,
     background-color 0.18s ease;
-  box-shadow: 0 10px 22px rgba(44, 74, 124, 0.22);
+  box-shadow: 0 8px 16px rgba(27, 44, 74, 0.18);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 50px;
   flex-shrink: 0;
   white-space: nowrap;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 .chat-input-submit:hover:not(:disabled) {
   transform: translateY(-1px);
-  background: #223f6d !important;
-  box-shadow: 0 12px 26px rgba(44, 74, 124, 0.28);
+  background: #2b4164 !important;
+  box-shadow: 0 10px 20px rgba(27, 44, 74, 0.22);
 }
 
 .chat-input-submit:active:not(:disabled) {
@@ -369,9 +369,11 @@
 }
 
 .chat-input-submit:disabled {
-  background: #cbd5e0 !important;
+  background: #718096 !important;
+  color: #f8fafc !important;
   cursor: not-allowed;
   box-shadow: none;
+  opacity: 0.95;
 }
 
 .chatbot-panel button[type="submit"]:hover:not(:disabled) {
@@ -385,7 +387,7 @@
 }
 
 .chatbot-panel button[type="submit"]:disabled {
-  background: #cbd5e0 !important;
+  background: #a9c5e4 !important;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -635,7 +637,7 @@ button[title="Clear chat"]:hover {
   }
 
   .messages-container {
-    background: #0f172a;
+    background: #aabde9;
   }
 
   .bg-gray-100 {
@@ -647,9 +649,9 @@ button[title="Clear chat"]:hover {
   }
 
   textarea {
-    background: #1e293b !important;
-    color: #f1f5f9 !important;
-    border-color: #475569 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #d1d5db !important;
   }
 
   textarea::placeholder {
@@ -657,7 +659,7 @@ button[title="Clear chat"]:hover {
   }
 
   form {
-    background: #1e293b !important;
-    border-top-color: #334155 !important;
+    background: #ffffff !important;
+    border-top-color: #e5e7eb !important;
   }
 }

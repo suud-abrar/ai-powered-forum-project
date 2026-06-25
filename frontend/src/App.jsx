@@ -16,6 +16,7 @@ import PostQuestion from "./pages/PostQuestion/PostQuestion";
 import QuestionDetail from "./pages/QuestionDetail/QuestionDetail";
 import MyQuestions from "./pages/MyQuestions/MyQuestions";
 import RagDocuments from "./pages/RagDocuments/RagDocuments";
+import ModerationPage from "./pages/Moderation/ModerationPage";
 function App() {
   return (
     <BrowserRouter>
@@ -26,50 +27,58 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<Auth />} />
 
-            {/* Protected routes with Layout */}
-            <Route element={<Layout />}>
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/questions/ask"
-                element={
-                  <ProtectedRoute>
-                    <PostQuestion />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/my-questions"
-                element={
-                  <ProtectedRoute>
-                    <MyQuestions />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/question/:questionHash"
-                element={
-                  <ProtectedRoute>
-                    <QuestionDetail />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/rag-documents"
-                element={
-                  <ProtectedRoute>
-                    <RagDocuments />
-                  </ProtectedRoute>
-                }
-              />
-            </Route>
+          {/* Protected routes with Layout */}
+          <Route element={<Layout />}>
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/questions/ask"
+              element={
+                <ProtectedRoute>
+                  <PostQuestion />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-questions"
+              element={
+                <ProtectedRoute>
+                  <MyQuestions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/question/:questionHash"
+              element={
+                <ProtectedRoute>
+                  <QuestionDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/rag-documents"
+              element={
+                <ProtectedRoute>
+                  <RagDocuments />
+                </ProtectedRoute>
+              }
+            />
 
+            <Route
+              path="/moderation"
+              element={
+                <ProtectedRoute>
+                  <ModerationPage />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
             {/* Catch-all redirect */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -22,9 +22,11 @@ export function AuthProvider({ children }) {
     const storedUser = authService.getStoredUser();
 
     if (token && storedUser) {
-      setUser(storedUser);
+      setUser({
+        ...storedUser,
+        role: storedUser.role || "user",
+      });
     }
-
     setLoading(false);
   }, []);
 
@@ -48,11 +50,19 @@ export function AuthProvider({ children }) {
    * Authenticates a user and updates the session state.
    * @param {Object} credentials - { email, password }
    */
-  const login = async credentials => {
+  const login = async (credentials) => {
     setLoading(true);
     try {
       const { user } = await authService.login(credentials);
-      setUser(user);
+
+      // IMPORTANT: ensure role is always present
+      const safeUser = {
+        ...user,
+        role: user.role || "user",
+      };
+
+      setUser(safeUser);
+
       return { success: true };
     } catch (error) {
       throw error;
@@ -60,7 +70,6 @@ export function AuthProvider({ children }) {
       setLoading(false);
     }
   };
-
   /**
    * Clears the user session and redirects to the login page.
    */
