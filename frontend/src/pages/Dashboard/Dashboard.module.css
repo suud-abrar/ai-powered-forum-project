@@ -258,7 +258,7 @@
   height: 34px;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--color-background-secondary);
+  /* background: red; */
   display: flex;
   align-items: center;
   justify-content: center;

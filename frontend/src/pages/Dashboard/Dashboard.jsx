@@ -44,6 +44,13 @@ function excerpt(text = "", max = 140) {
   return plain.length > max ? plain.slice(0, max).trimEnd() + "…" : plain;
 }
 
+/** Same avatar source used in Sidebar.jsx — keeps colors consistent app-wide. */
+function avatarUrl(firstName, lastName) {
+  const f = firstName?.trim() || "User";
+  const l = lastName?.trim() || "";
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(f)}+${encodeURIComponent(l)}&background=random`;
+}
+
 /* ─── spinner ─────────────────────────────────────────────────────────────── */
 function Spinner() {
   return (
@@ -106,16 +113,12 @@ function StatCard({ label, value }) {
 
 /* ─── question row ────────────────────────────────────────────────────────── */
 function QuestionRow({ question, isOwn, onClick }) {
-  // Backend returns snake_case fields
   const firstName = question.first_name || question.firstName || "";
   const lastName = question.last_name || question.lastName || "";
-  const initials =
-    ((firstName[0] || "") + (lastName[0] || "")).toUpperCase() || "?";
   const replyCount =
     question.answer_count ?? question.answerCount ?? question.replyCount ?? 0;
   const createdAt = question.created_at || question.createdAt;
   const body = question.content || question.body || "";
-  const qHash = question.question_hash || question.questionHash || question.id;
 
   return (
     <article
@@ -128,16 +131,12 @@ function QuestionRow({ question, isOwn, onClick }) {
       }}
     >
       <div className={styles.row__avatar} aria-hidden="true">
-        {question.avatarUrl ? (
-          <img
-            src={question.avatarUrl}
-            alt=""
-            className={styles.row__avatarImg}
-            referrerPolicy="no-referrer"
-          />
-        ) : (
-          <span className={styles.row__initials}>{initials}</span>
-        )}
+        <img
+          src={avatarUrl(firstName, lastName)}
+          alt=""
+          className={styles.row__avatarImg}
+          referrerPolicy="no-referrer"
+        />
       </div>
       <div className={styles.row__body}>
         <div className={styles.row__titleRow}>
@@ -162,7 +161,7 @@ function QuestionRow({ question, isOwn, onClick }) {
           </span>
           <span className={styles.row__time}>
             {timeAgo(createdAt)}
-            {(firstName || lastName) && ` by ${firstName} ${lastName}`.trim()}
+            {(firstName || lastName) && " " + `by ${firstName} ${lastName}`.trim()}
           </span>
           {question.score != null && (
             <span className={styles.row__score}>
@@ -191,7 +190,6 @@ export default function Dashboard() {
   const isSearching = !!(urlQ || urlSemantic);
   const firstName = user?.firstName?.trim() || "";
 
-  /* derived stats — use snake_case fields from backend */
   const stats = {
     questions: questions.length,
     replies: questions.reduce(
@@ -201,14 +199,13 @@ export default function Dashboard() {
     unanswered: questions.filter(
       (q) => (q.answer_count ?? q.answerCount ?? q.replyCount ?? 0) === 0,
     ).length,
-    yours: questions.filter(
-      (q) =>
-        q.user_id === user?.userId ||
-        q.user_id === user?.id ||
-        q.userId === user?.userId ||
-        q.userId === user?.id,
-    ).length,
+    yours: questions.filter((q) => q.user_id === user?.id).length,
   };
+
+  // q.user_id === user?.userId ||
+  //       q.user_id === user?.id ||
+  //       q.userId === user?.userId ||
+  //       q.userId === user?.id,
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
@@ -223,7 +220,6 @@ export default function Dashboard() {
           limit: PAGE_SIZE,
         });
       }
-      // Backend returns { success, data: [...] }
       setQuestions(data.data ?? data.questions ?? []);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load questions.");
