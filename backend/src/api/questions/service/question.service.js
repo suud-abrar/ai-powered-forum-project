@@ -6,24 +6,49 @@ import {
   storeQuestionVector,
 } from "./vector.service.js";
 import { embedForumPost } from "../../forum-chat/service/forum-post-vector.helper.js";
+import { moderateWithGemini } from "../../moderation/service/moderation.service.js";
 
 const generateQuestionHash = () => crypto.randomBytes(8).toString("hex");
 
 export const createQuestionService = async ({ title, content, userId }) => {
   const questionHash = generateQuestionHash();
 
+  const aiResult = await moderateWithGemini(`${title}\n\n${content}`);
+
+  let moderationStatus = "approved";
+
+  if (aiResult.status === "flagged") {
+    moderationStatus = "pending";
+  }
+
   const result = await safeExecute(
-    `INSERT INTO questions (question_hash, title, content, user_id)
-     VALUES (?, ?, ?, ?)`,
-    [questionHash, title, content, userId],
+    `INSERT INTO questions (
+        question_hash,
+        title,
+        content,
+        user_id,
+        moderation_status,
+        moderation_reason
+     )
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [
+      questionHash,
+      title,
+      content,
+      userId,
+      String(moderationStatus),
+      aiResult.reason || "AI Auto-Approved",
+    ],
   );
 
   const questionId = result.insertId;
 
+  // embeddings
   const sourceText = normalizeQuestionText(title);
 
   try {
     const embedding = await generateQuestionEmbedding(sourceText);
+
     await storeQuestionVector({
       questionId,
       sourceText,
@@ -39,18 +64,20 @@ export const createQuestionService = async ({ title, content, userId }) => {
     });
   }
 
-  // send the question to chatbot knowledge base
-
   await embedForumPost("question", questionId, `${title}\n\n${content}`);
-
+ 
   return {
     id: questionId,
     questionHash,
     title,
     content,
     userId,
+    moderationStatus,
+    aiResult,
   };
 };
+
+  
 
 export const listQuestionsService = async ({ search, mine, userId }) => {
   let sql = `
