@@ -34,7 +34,8 @@ CREATE TABLE `questions` (
     `user_id` INT NOT NULL,
     `title` VARCHAR(255) NOT NULL,
     `content` TEXT NOT NULL, -- Detailed content including code sections
-    `moderation_status` ENUM('pending', 'approved', 'removed') DEFAULT 'pending', 
+    `moderation_status` VARCHAR(50) NOT NULL DEFAULT 'approved',
+    `moderation_reason` TEXT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CHECK (CHAR_LENGTH(`title`) >= 5),
@@ -76,6 +77,8 @@ CREATE TABLE `answers` (
     `question_id` INT NOT NULL,
     `user_id` INT NOT NULL,
     `content` TEXT NOT NULL, -- Content including code sections
+    `moderation_status` VARCHAR(50) NOT NULL DEFAULT 'approved',
+    `moderation_reason` TEXT NULL,
     `moderation_status` ENUM('pending', 'approved', 'removed') DEFAULT 'pending',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
