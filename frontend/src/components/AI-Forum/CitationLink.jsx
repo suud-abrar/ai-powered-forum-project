@@ -12,7 +12,7 @@ export const CitationLink = ({ citation, onCitationClick }) => {
   return (
     <button
       onClick={handleClick}
-      className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 underline text-sm ml-1"
+      className="inline-flex items-center gap-1 text-orange-600 hover:text-orange-800 underline text-sm ml-1"
       title={`${citation.type}: ${citation.title || citation.snippet}`}
     >
       <span>[{citation.id.slice(0, 8)}]</span>
