@@ -22,6 +22,10 @@ CREATE TABLE `users` (
     INDEX `idx_users_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
+-- Add column table already exists
+ALTER TABLE users ADD COLUMN google_id VARCHAR(255) UNIQUE NULL;
+
 -- -----------------------------------------------------------------------------
 -- 2. Questions Table
 -- Stores the main questions posted by users.

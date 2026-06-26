@@ -7,9 +7,12 @@ import {
 import {
   registerValidation,
   loginValidation,
+  validateGoogleAuth, 
 } from "../validations/auth.validation.js";
 import { authenticateUser } from "../../../middleware/authentication.js";
-const router = express.Router();
+import googleRoutes from "./google.routes.js";
+
+const router = express.Router(); 
 
 /**
  * @route POST /api/auth/register
@@ -25,4 +28,8 @@ router.post("/register", registerValidation, registerController);
  */
 router.post("/login", loginValidation, loginController);
 router.post("/logout", authenticateUser, logoutController);
+
+// Google OAuth routes
+router.use("/google", googleRoutes); 
+
 export default router;
