@@ -17,7 +17,7 @@ export const useGoogleAuth = () => {
 
         if (result.success) {
           // Call your existing login function to update context
-          login(result.user, result.token);
+          login({ token: result.token, user: result.user });
           return true;
         }
 
