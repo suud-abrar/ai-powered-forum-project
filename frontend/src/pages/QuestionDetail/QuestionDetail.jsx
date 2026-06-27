@@ -175,6 +175,12 @@ export default function QuestionDetail() {
   const charCount = answerText.length;
   const canPost = charCount >= 20 && !isPosting;
 
+  const sortedAnswers = recommendation
+    ? [...answers].sort((a, b) =>
+        b.answer_id === recommendation.recommendedAnswerId ? 1 : -1,
+      )
+    : answers;
+
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   async function handleCheckFit() {
@@ -354,7 +360,7 @@ export default function QuestionDetail() {
               </div>
             ) : (
               <div className={styles.answerList}>
-                {answers.map((answer) => (
+                {sortedAnswers.map((answer) => (
                   <AnswerCard
                     key={answer.answer_id}
                     answer={answer}

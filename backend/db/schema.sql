@@ -81,7 +81,6 @@ CREATE TABLE `answers` (
     `question_id` INT NOT NULL,
     `user_id` INT NOT NULL,
     `content` TEXT NOT NULL, -- Content including code sections
-    `moderation_status` VARCHAR(50) NOT NULL DEFAULT 'approved',
     `moderation_reason` TEXT NULL,
     `moderation_status` ENUM('pending', 'approved', 'removed') DEFAULT 'pending',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
