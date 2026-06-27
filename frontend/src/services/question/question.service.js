@@ -159,3 +159,9 @@ export async function getRecommendedAnswer(questionHash) {
   );
   return data.data; 
 }
+
+
+export async function getAnswerSummary(questionHash) {
+  const res = await apiClient.get(`/api/questions/${questionHash}/answer-summary`);
+  return res.data.data ?? res.data;
+}
