@@ -140,6 +140,20 @@ CREATE TABLE `document_chunk_vectors` (
     UNIQUE KEY `uniq_chunk_vectors_chunk_id` (`chunk_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-----------------------------------------------------------------------------------
+
+-- forgot password
+
+CREATE TABLE password_resets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  code_hash VARCHAR(255) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  reset_token_hash VARCHAR(255) DEFAULT NULL,
+  used TINYINT(1) DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
 
 -- -----------------------------------------------------------------------------
 -- 6. Forum Post Vectors Table

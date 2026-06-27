@@ -3,6 +3,9 @@ import {
   registerController,
   loginController,
   logoutController,
+  forgotPasswordController,
+  verifyResetCodeController,
+  resetPasswordController,
 } from "../controller/auth.controller.js";
 import {
   registerValidation,
@@ -29,6 +32,10 @@ router.post("/register", registerValidation, registerController);
 router.post("/login", loginValidation, loginController);
 router.post("/logout", authenticateUser, logoutController);
 
+// forgot password
+router.post("/forgot-password", forgotPasswordController);
+router.post("/verify-reset-code", verifyResetCodeController);
+router.post("/reset-password", resetPasswordController);
 // Google OAuth routes
 router.use("/google", googleRoutes); 
 
