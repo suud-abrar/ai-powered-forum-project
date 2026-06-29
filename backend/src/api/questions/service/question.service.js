@@ -15,35 +15,31 @@ export const createQuestionService = async ({ title, content, userId }) => {
 
   const aiResult = await moderateWithGemini(`${title}\n\n${content}`);
 
-  let moderationStatus = "approved";
-
-  if (aiResult.status === "flagged") {
-    moderationStatus = "pending";
-  }
+  const moderationStatus =
+    aiResult.status === "flagged" ? "flagged" : "approved";
 
   const result = await safeExecute(
     `INSERT INTO questions (
-        question_hash,
-        title,
-        content,
-        user_id,
-        moderation_status,
-        moderation_reason
-     )
-     VALUES (?, ?, ?, ?, ?, ?)`,
+      question_hash,
+      title,
+      content,
+      user_id,
+      moderation_status,
+      moderation_reason
+   )
+   VALUES (?, ?, ?, ?, ?, ?)`,
     [
       questionHash,
       title,
       content,
       userId,
-      String(moderationStatus),
+      moderationStatus,
       aiResult.reason || "AI Auto-Approved",
     ],
   );
-
   const questionId = result.insertId;
 
-  // embeddings
+  // Embeddings
   const sourceText = normalizeQuestionText(title);
 
   try {
@@ -65,7 +61,7 @@ export const createQuestionService = async ({ title, content, userId }) => {
   }
 
   await embedForumPost("question", questionId, `${title}\n\n${content}`);
- 
+
   return {
     id: questionId,
     questionHash,
@@ -76,8 +72,6 @@ export const createQuestionService = async ({ title, content, userId }) => {
     aiResult,
   };
 };
-
-  
 
 export const listQuestionsService = async ({ search, mine, userId }) => {
   let sql = `
@@ -106,7 +100,6 @@ WHERE 1=1
         OR q.content LIKE ?
       )
     `;
-
     params.push(`%${search}%`);
     params.push(`%${search}%`);
   }
@@ -120,8 +113,26 @@ WHERE 1=1
   sql += ` ORDER BY q.created_at DESC`;
 
   const questions = await safeExecute(sql, params);
-
   return questions;
+};
+export const getPendingQuestionsService = async () => {
+  const sql = `
+    SELECT
+      q.question_id,
+      q.question_hash,
+      q.title,
+      q.content,
+      q.user_id,
+      q.created_at,
+      u.first_name,
+      u.last_name
+    FROM questions q
+    JOIN users u ON q.user_id = u.user_id
+    WHERE q.moderation_status = 'pending'
+    ORDER BY q.created_at DESC
+  `;
+
+  return await safeExecute(sql);
 };
 
 export const getQuestionDetailsService = async (questionHash) => {
