@@ -6,8 +6,7 @@ import {
   resolveModerationItem,
 } from "../../services/moderation/moderationService.js";
 
-import ModerationCard from "../../components/Moderation/Moderation.jsx";
-import { js } from '@eslint/js';
+import ModerationCard from "../../components/Moderation/Moderation.jsx"
 
 const ModerationPage = () => {
   const [items, setItems] = useState([]);

@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import styles from "./QuestionDetail.module.css";
 import {
-  getSingleQuestion,
+  getQuestion,
   assessAnswerFit,
   getSimilarQuestions,
   getRecommendedAnswer,

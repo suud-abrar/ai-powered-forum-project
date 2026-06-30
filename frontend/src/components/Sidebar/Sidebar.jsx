@@ -22,7 +22,7 @@ console.log("ROLE VALUE:", user?.role);
   if (user?.role === "moderator") {
     navItems.push({
       icon: Shield,
-      label: "Moderation",
+      label: "Flagged Content",
       path: "/moderation",
     });
   }

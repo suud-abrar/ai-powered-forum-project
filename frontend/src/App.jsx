@@ -24,58 +24,66 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-    <ForumChatbotProvider>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Landing />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />;
-          {/* Protected routes with Layout */}
-          <Route element={<Layout />}>
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/questions/ask"
-              element={
-                <ProtectedRoute>
-                  <PostQuestion />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/my-questions"
-              element={
-                <ProtectedRoute>
-                  <MyQuestions />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/question/:questionHash"
-              element={
-                <ProtectedRoute>
-                  <QuestionDetail />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/rag-documents"
-              element={
-                <ProtectedRoute>
-                  <RagDocuments />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-          {/* Catch-all redirect */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <ForumChatbotProvider>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Landing />} />
+            <Route path="/auth" element={<Auth />} />
+
+            {/* Protected routes with Layout */}
+            <Route element={<Layout />}>
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/questions/ask"
+                element={
+                  <ProtectedRoute>
+                    <PostQuestion />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-questions"
+                element={
+                  <ProtectedRoute>
+                    <MyQuestions />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/question/:questionHash"
+                element={
+                  <ProtectedRoute>
+                    <QuestionDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/rag-documents"
+                element={
+                  <ProtectedRoute>
+                    <RagDocuments />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/moderation"
+                element={
+                  <ProtectedRoute role="moderator">
+                    <ModerationPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            {/* Catch-all redirect */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </ForumChatbotProvider>
       </AuthProvider>
     </BrowserRouter>

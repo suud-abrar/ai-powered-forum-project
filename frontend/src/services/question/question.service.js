@@ -19,7 +19,7 @@ export async function getQuestions({
 } = {}) {
   const res = await apiClient.get("/api/questions", {
     params: {
-      ...(search ? {search: search } : {}),
+      ...(search ? { search } : {}),
       ...(mine !== undefined ? { mine } : {}),
       limit,
       offset,
@@ -40,7 +40,7 @@ export async function searchQuestionsSemantic(
 ) {
   const res = await apiClient.get("/api/questions/search", {
     params: {
-      query: query, // ← was 'q: query', must be 'query' to match backend
+      query, // Matches backend expectation
       limit,
       offset,
     },
@@ -55,6 +55,8 @@ export async function searchQuestionsSemantic(
  */
 export async function getQuestion(questionHash) {
   const res = await apiClient.get(`/api/questions/${questionHash}`);
+  // NOTE: If your backend wraps the response payload inside a "data" object,
+  // change this to: return res.data.data;
   return res.data;
 }
 
@@ -87,25 +89,26 @@ export async function getSimilarQuestions(
   questionHash,
   { k = 5, threshold = 0.5 } = {},
 ) {
-  const response = await apiClient.get(
-    `/api/questions/${questionHash}/similar`,
-    {
-      params: { k, threshold },
-    },
-  );
-  return response.data.data;
+  const res = await apiClient.get(`/api/questions/${questionHash}/similar`, {
+    params: { k, threshold },
+  });
+  return res.data.data;
 }
 
 /**
  * POST /api/questions/:questionHash/answer-fit
  * Evaluate how well a draft answer addresses the question.
  * @param {string} questionHash
- * @param {{ content: string }} data
+ * @param {{ content: string } | string} answerData - Accepts either an object or raw string payload depending on backend setup
  */
-export async function evaluateAnswerFit(questionHash, data) {
+export async function assessAnswerFit(questionHash, answerData) {
+  // If you pass a raw string, we map it to the body object expected by the backend
+  const payload =
+    typeof answerData === "string" ? { content: answerData } : answerData;
+
   const res = await apiClient.post(
     `/api/questions/${questionHash}/answer-fit`,
-    data,
+    payload,
   );
   return res.data;
 }
@@ -120,44 +123,16 @@ export async function createAnswer(data) {
   return res.data;
 }
 
-/**Get delails of single question by questionHash */
-
-// frontend/src/services/question/question.service.js
-// Add these functions to your existing question.service.js
 /**
- * GET /api/questions/:questionHash
- * Fetches a single question with its answers.
+ * GET /api/questions/:questionHash/recommend-answer
+ * Fetch a recommended AI generated answer for a question thread.
  * @param {string} questionHash
  */
-export async function getSingleQuestion(questionHash) {
-  const response = await apiClient.get(`/api/questions/${questionHash}`);
-  return response.data.data;
-}
-
-/**
- * POST /api/questions/:questionHash/answer-fit
- * Evaluates how well an answer fits the question using AI.
- * @param {string} questionHash
- * @param {string} answerText
- * @returns {{ level: "strong"|"partial"|"weak", note: string }}
- */
-export async function assessAnswerFit(questionHash, answerText) {
-  const response = await apiClient.post(
-    `/api/questions/${questionHash}/answer-fit`,
-    {
-      answerText,
-    },
-  );
-  return response.data.data;
-}
-
-//_____ Reconended answer________________________________________________________________________
-
 export async function getRecommendedAnswer(questionHash) {
-  const { data } = await apiClient.get(
+  const res = await apiClient.get(
     `/api/questions/${questionHash}/recommend-answer`,
   );
-  return data.data; 
+  return res.data.data;
 }
 
 
