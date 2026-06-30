@@ -55,11 +55,12 @@
 
 .navbar__search-icon {
   position: absolute;
+  top: 0;
+  bottom: 0;
   top: 50%;
   transform: translateY(-50%);
   left: 0.75rem;
   display: flex;
-  padding-left: 10px;
   align-items: center;
   pointer-events: none;
   color: var(--text-secondary);
@@ -88,7 +89,6 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.375rem 0.75rem;
-  margin-right: 10px;
   background-color: var(--primary);
   color: var(--text-inverse);
   border: none;
@@ -208,78 +208,4 @@
 .navbar__logout:focus {
   outline: none;
   box-shadow: var(--shadow-focus);
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    flex-wrap: wrap;
-    padding: 1rem;
-    gap: 1rem;
-    min-height: auto;
-  }
-
-  /* Explicit order on direct .navbar children only.
-     menuButton stays first (it toggles the sidebar, top-left as expected).
-     titleBlock ("Home") comes next, then search sits between title and
-     actions, then actions (avatar/logout) comes last. */
-  .navbar__menuButton {
-    order: 0;
-  }
-
-  .navbar__titleBlock {
-    order: 1;
-    max-width: 100%;
-  }
-
-  .navbar__pageTitle {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .navbar__search {
-    order: 2; /* was 1 — now sits after titleBlock, before actions */
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .navbar__actions {
-    order: 3; /* ensures avatar/logout group renders last */
-    gap: 0.5rem;
-  }
-
-  /* This order:3 was previously misapplied — .navbar__user is nested
-     inside .navbar__actions, not a sibling of .navbar__search, so it had
-     no effect on the layout you were trying to achieve. Removed the
-     order here since .navbar__actions itself now controls the position. */
-  .navbar__user {
-    border-left: none;
-    padding-left: 0;
-  }
-}
-/* ===========================
-   Mobile Menu Button
-   =========================== */
-
-.navbar__menuButton {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-primary);
-  padding: 0.5rem;
-  border-radius: var(--radius-md);
-  transition: background-color var(--transition-fast);
-}
-
-.navbar__menuButton:hover {
-  background: var(--surface-hover);
-}
-
-@media (max-width: 968px) {
-  .navbar__menuButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 }

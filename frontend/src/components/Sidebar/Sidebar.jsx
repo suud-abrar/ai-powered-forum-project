@@ -9,10 +9,10 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Sidebar.module.css";
 
-export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
+export default function Sidebar() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  console.log("ROLE VALUE:", user?.role);
+console.log("ROLE VALUE:", user?.role);
   const navItems = [
     { icon: LayoutDashboard, label: "Home", path: "/dashboard" },
     { icon: MessageSquare, label: "Your Topics", path: "/my-questions" },
@@ -28,11 +28,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
   }
 
   return (
-    <aside
-      className={`${styles.sidebar} ${
-        sidebarOpen ? styles["sidebar--open"] : ""
-      }`}
-    >
+    <aside className={styles.sidebar}>
       <div className={styles.sidebar__header}>
         <div
           className={styles.sidebar__branding}
@@ -60,7 +56,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
           <div key={item.path} className={styles["sidebar__nav-item-wrapper"]}>
             <NavLink
               to={item.path}
-              onClick={() => setSidebarOpen(false)}
               className={({ isActive }) =>
                 `${styles.sidebar__link} ${
                   isActive
@@ -90,10 +85,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div className={styles.sidebar__footer}>
         <button
           type="button"
-          onClick={() => {
-            navigate("/questions/ask");
-            setSidebarOpen(false);
-          }}
+          onClick={() => navigate("/questions/ask")}
           className={styles.sidebar__button}
         >
           New Question
@@ -125,10 +117,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
           <button
             type="button"
-            onClick={() => {
-              logout();
-              setSidebarOpen(false);
-            }}
+            onClick={logout}
             className={styles.sidebar__logout}
           >
             <LogOut size={16} />
@@ -139,3 +128,4 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     </aside>
   );
 }
+

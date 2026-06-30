@@ -10,7 +10,6 @@
   flex-direction: column;
   background-color: var(--background);
   color: var(--text-primary);
-  overflow-x: hidden;
 }
 
 /* Header */
@@ -119,8 +118,7 @@
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition:
-    color var(--transition-fast),
+  transition: color var(--transition-fast),
     background-color var(--transition-fast);
 }
 
@@ -151,8 +149,7 @@
   border-radius: var(--radius-md);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition:
-    background-color var(--transition-fast),
+  transition: background-color var(--transition-fast),
     box-shadow var(--transition-fast);
 }
 
@@ -188,8 +185,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition:
-    border-color var(--transition-fast),
+  transition: border-color var(--transition-fast),
     background-color var(--transition-fast);
 }
 
@@ -466,8 +462,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  transition:
-    border-color var(--transition-fast),
+  transition: border-color var(--transition-fast),
     box-shadow var(--transition-fast);
 }
 
@@ -681,70 +676,4 @@
 .landing__footerDot {
   color: var(--text-placeholder);
   user-select: none;
-}
-
-/*  Responsivness */
-
-@media (max-width: 768px) {
-  .landing__headerInner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .landing__nav {
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .landing__headerActions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 960px) {
-  .landing__heroInner {
-    grid-template-columns: 1fr;
-  }
-
-  .landing__heroPanel {
-    order: 2;
-  }
-
-  .landing__heroCopy {
-    order: 1;
-  }
-}
-
-@media (max-width: 900px) {
-  .landing__ragPipeline {
-    grid-template-columns: 1fr;
-  }
-
-  .landing__ragStep {
-    padding: var(--spacing-md);
-  }
-}
-
-@media (max-width: 640px) {
-  .landing__cardGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .landing__steps {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .landing__footerInner {
-    align-items: flex-start;
-  }
-
-  .landing__footerLinks {
-    width: 100%;
-  }
 }
