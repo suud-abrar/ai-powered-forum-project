@@ -1,11 +1,19 @@
+import { useNavigate } from "react-router-dom";
+
 export const CitationLink = ({ citation, onCitationClick }) => {
+  const navigate = useNavigate();
+
   const handleClick = (e) => {
     e.preventDefault();
-    if (onCitationClick) {
-      onCitationClick(citation);
+
+    // Navigate based on citation type
+    if (citation.type === "question") {
+      navigate(`/question/${citation.id}`);
+    } else if (citation.type === "answer") {
+      // For answers, navigate to the question that contains this answer
+      navigate(`/question/${citation.id}`);
     } else {
-      // Fallback: navigate to the post
-      window.location.hash = `#post-${citation.id}`;
+      console.log("Citation clicked:", citation);
     }
   };
 

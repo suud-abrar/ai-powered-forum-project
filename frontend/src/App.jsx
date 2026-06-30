@@ -16,6 +16,9 @@ import PostQuestion from "./pages/PostQuestion/PostQuestion";
 import QuestionDetail from "./pages/QuestionDetail/QuestionDetail";
 import MyQuestions from "./pages/MyQuestions/MyQuestions";
 import RagDocuments from "./pages/RagDocuments/RagDocuments";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+
+
 import ModerationPage from "./pages/Moderation/ModerationPage";
 function App() {
   return (

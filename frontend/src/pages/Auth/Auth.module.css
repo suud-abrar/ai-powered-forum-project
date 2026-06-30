@@ -398,6 +398,13 @@
   line-height: 1.5;
 }
 
+.auth__passwordHint {
+  margin: -0.75rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
 /* Buttons */
 .auth__button {
   width: 100%;

@@ -26,7 +26,7 @@ export const ChatWidget = () => {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all flex items-center justify-center hover:scale-110 active:scale-95"
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-orange-500 text-white shadow-lg hover:bg-orange-600 transition-all flex items-center justify-center hover:scale-110 active:scale-95"
         title={isOpen ? "Close chatbot" : "Open chatbot"}
       >
         {isOpen ? (
@@ -50,15 +50,17 @@ export const ChatWidget = () => {
       {isOpen && (
         <div className="chatbot-panel">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-t-lg shadow-md">
+          <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4 rounded-t-lg shadow-md">
             <div className="flex justify-between items-center">
               <div>
                 <h3 className="font-bold text-lg">Forum Assistant</h3>
-                <p className="text-xs text-blue-100">Ask about forum topics</p>
+                <p className="text-xs text-orange-100">
+                  Ask about forum topics
+                </p>
               </div>
               <button
                 onClick={clearMessages}
-                className="p-1 hover:bg-blue-500 rounded-lg transition-colors"
+                className="p-1 hover:bg-orange-500 rounded-lg transition-colors"
                 title="Clear chat"
               >
                 <svg

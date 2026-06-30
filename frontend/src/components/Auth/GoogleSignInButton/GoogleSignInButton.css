@@ -1,0 +1,64 @@
+.google-signin-container {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+/* Google Login Button Wrapper */
+.google-signin-container > div {
+  width: 100%;
+}
+
+/* Error Message */
+.google-error {
+  color: #dc2626;
+  font-size: 13px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* Divider */
+.divider {
+  position: relative;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.divider span {
+  position: relative;
+  display: inline-block;
+  padding: 0 12px;
+  background: white;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .google-signin-container {
+    margin-bottom: 20px;
+  }
+
+  .divider {
+    margin: 16px 0;
+  }
+
+  .divider span {
+    font-size: 12px;
+    padding: 0 10px;
+  }
+}

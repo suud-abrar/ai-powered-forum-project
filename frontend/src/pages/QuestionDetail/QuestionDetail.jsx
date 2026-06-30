@@ -10,7 +10,11 @@ import {
   getRecommendedAnswer,
 } from "../../services/question/question.service";
 import { postAnswer } from "../../services/answer/answer.service";
+import DiscussionSummaryPanel from "../../components/DiscussionSummaryPanel/DiscussionSummaryPanel";
 import { useAuth } from "../../contexts/AuthContext";
+
+// Minimum number of answers before the Discussion Summary panel appears
+const SUMMARY_THRESHOLD = 3;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -175,6 +179,12 @@ export default function QuestionDetail() {
   const charCount = answerText.length;
   const canPost = charCount >= 20 && !isPosting;
 
+  const sortedAnswers = recommendation
+    ? [...answers].sort((a, b) =>
+        b.answer_id === recommendation.recommendedAnswerId ? 1 : -1,
+      )
+    : answers;
+
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   async function handleCheckFit() {
@@ -323,6 +333,15 @@ export default function QuestionDetail() {
               <h2 className={styles.sectionTitle}>
                 Community Answers ({answers.length})
               </h2>
+
+              {/* Discussion Summary — only shown once there's enough discussion to summarize */}
+              {answers.length > SUMMARY_THRESHOLD && (
+                <DiscussionSummaryPanel
+                  questionHash={questionHash}
+                  answerCount={answers.length}
+                />
+              )}
+
               {answers.length >= 2 && (
                 <button
                   className={styles.recommendBtn}
@@ -354,21 +373,22 @@ export default function QuestionDetail() {
               </div>
             ) : (
               <div className={styles.answerList}>
-                {answers.map((answer) => (
+                {sortedAnswers.map((answer) => (
                   <AnswerCard
                     key={answer.answer_id}
                     answer={answer}
                     isRecommended={
-                      recommendation?.recommendedAnswerId === answer.answer_id
+                      recommendation?.recommendedAnswerId ===
+                        answer.answer_id && answer.answer_id != null
                     }
                     confidence={
                       recommendation?.recommendedAnswerId === answer.answer_id
-                        ? recommendation.confidence
+                        ? recommendation?.confidence
                         : null
                     }
                     recommendationReason={
                       recommendation?.recommendedAnswerId === answer.answer_id
-                        ? recommendation.reason
+                        ? recommendation?.reason
                         : null
                     }
                   />
