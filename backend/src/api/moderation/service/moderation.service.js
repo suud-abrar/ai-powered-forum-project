@@ -53,7 +53,6 @@ ${text}
       reason: "fallback safety mode",
     };
   }
-}
 
 
 /* ──────────────────────────────── */
