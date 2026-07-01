@@ -29,6 +29,7 @@ function App() {
             {/* Public routes */}
             <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path ="forgot-password" element={<ForgotPassword/>} />
 
             {/* Protected routes with Layout */}
             <Route element={<Layout />}>
